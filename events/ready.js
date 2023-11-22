@@ -26,7 +26,7 @@ module.exports = {
 
             // The put method is used to fully refresh all commands in the guild with the current set
             const data = await rest.put(
-                Routes.applicationGuildCommands(client.user.id, "1060944604649766932"),
+                Routes.applicationCommands(client.user.id),
                 { body: commands },
             );
 
