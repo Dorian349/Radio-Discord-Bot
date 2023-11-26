@@ -1,7 +1,8 @@
 const { REST, Routes } = require('discord.js');
+const { ActivityType } = require('discord.js'); // Add this line
 const config = require('../config.json');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
 const icy = require('icy');
 
 const commands = [];
@@ -9,7 +10,7 @@ const commandsPath = path.join(__dirname, '..', 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-    const command = require(commandsPath + `/${file}`);
+    const command = require(path.join(commandsPath, file));
     commands.push(command.data.toJSON());
 }
 
@@ -19,7 +20,7 @@ module.exports = {
     name: 'ready',
     async execute(client) {
         console.log(`Discord Radio bot has started with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`);
-        getICY(client, client.config.settings["radio-url"]);
+        getICY(client, config.settings["radio-url"]);
 
         try {
             console.log(`Started refreshing ${commands.length} application (/) commands.`);
@@ -39,17 +40,17 @@ module.exports = {
 }
 
 function getICY(client, url) {
-	const icyReader = icy.get(url, function (i) {
-		i.on('metadata', function (metadata) {
-			let icyData = icy.parse(metadata);
-			if (icyData.StreamTitle) changeActivity(client, icyData.StreamTitle);
-		});
-		i.resume();
-	});
+    const icyReader = icy.get(url, function (i) {
+        i.on('metadata', function (metadata) {
+            let icyData = icy.parse(metadata);
+            if (icyData.StreamTitle) changeActivity(client, icyData.StreamTitle);
+        });
+        i.resume();
+    });
 }
 
 function changeActivity(client, message) {
-  client.user.setPresence({
-    activities: [{ name: message, type: ActivityType.Listening }]
-  });
-}
+    client.user.setPresence({
+        activities: [{ name: message, type: ActivityType.Listening }]
+    });
+	    }
