@@ -1,5 +1,4 @@
-const { REST, Routes } = require('discord.js');
-const { ActivityType } = require('discord.js'); // Add this line
+const { REST, Routes, ActivityType } = require('discord.js');
 const config = require('../config.json');
 const fs = require('fs');
 const path = require('path');
